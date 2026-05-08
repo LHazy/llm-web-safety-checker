@@ -1,7 +1,10 @@
 import os
 import sys
 import base64
+import argparse
 import datetime
+
+from dataclasses import dataclass
 
 from io import BytesIO
 from PIL import Image
@@ -14,21 +17,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
-
-# BASE_URL="http://localhost:11434/"
-BASE_URL = "http://host.docker.internal:11434/"
-MODEL_ID="gemma4:31b"
-#MODEL_ID="gemma4:e2b"
-
-
-LLM_GEMMA4_31B = ChatOllama(
-  model=MODEL_ID,
-  base_url=BASE_URL,
-  api_key="ollama",
-  #reasoning="high",
-  #num_ctx=1024*128,
-  temperature=0
-)
 
 def image_to_base64(file_path):
   pi = Image.open(file_path)
@@ -98,24 +86,42 @@ def judge_safe(data):
     return [HumanMessage(content=content_parts)]
 
 
-def main(url):
+def main(model_endpoint, model_id, url):
   file_path = take_screenshot(url)
-
   image_b64 = image_to_base64(file_path)
   
-  chain = judge_safe | LLM_GEMMA4_31B | StrOutputParser()
+  llm = ChatOllama(
+    model=model_id,
+    base_url=model_endpoint,
+    api_key="ollama",
+    #reasoning="high",
+    #num_ctx=1024*128,
+    temperature=0
+  )
+  
+  chain = judge_safe | llm | StrOutputParser()
   query_chain = chain.invoke({"text": judge_prompt, "image": image_b64})
   
   print(query_chain)
 
 
 if __name__ == "__main__":
-  if len(sys.argv) != 2:
-    print("Usage: python main.py <url>")
-    sys.exit(1)
+  """
+  Usage: python main.py --model-endpoint http://host.docker.internal:11434/ --model-id gemma4:31b <url>
+    - --model-endpoint: Endpoint of the LLM server (default: http://host.docker.internal:11434/)
+    - --model-id: ID of the model to use (default: gemma4:31b)
+    - <url>: URL of the website to check
+  """
+  parser = argparse.ArgumentParser(description='LLM Web Safety Checker')
+  parser.add_argument('--model-endpoint', type=str, default='http://host.docker.internal:11434/', help='Endpoint of the LLM server')
+  parser.add_argument('--model-id', type=str, default='gemma4:31b', help='ID of the model to use')
+  parser.add_argument('url', type=str, help='URL of the website to check')
+  args = parser.parse_args()
 
   if not os.path.exists('./screenshots'):
     os.makedirs('./screenshots')
   
-  url = sys.argv[1]
-  main(url)
+  url = args.url
+  model_endpoint = args.model_endpoint
+  model_id = args.model_id
+  main(model_endpoint, model_id, url)
