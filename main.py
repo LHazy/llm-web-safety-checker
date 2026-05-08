@@ -106,12 +106,6 @@ def main(model_endpoint, model_id, url):
 
 
 if __name__ == "__main__":
-  """
-  Usage: python main.py --model-endpoint http://host.docker.internal:11434/ --model-id gemma4:31b <url>
-    - --model-endpoint: Endpoint of the LLM server (default: http://host.docker.internal:11434/)
-    - --model-id: ID of the model to use (default: gemma4:31b)
-    - <url>: URL of the website to check
-  """
   parser = argparse.ArgumentParser(description='LLM Web Safety Checker')
   parser.add_argument('--model-endpoint', type=str, default='http://host.docker.internal:11434/', help='Endpoint of the LLM server')
   parser.add_argument('--model-id', type=str, default='gemma4:31b', help='ID of the model to use')
