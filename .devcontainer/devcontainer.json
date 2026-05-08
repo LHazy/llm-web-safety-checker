@@ -1,0 +1,22 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+	"name": "Tech Support Fraud Detection",
+	"build": {
+		"dockerfile": "../Dockerfile",
+		"context": ".."
+	},
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+				"GitHub.copilot-chat",
+				"ms-windows-ai-studio.windows-ai-studio",
+				"ms-toolsai.jupyter"
+			]
+		}
+	}
+}
