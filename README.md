@@ -8,7 +8,16 @@ LLMにWebサイトのコンテンツが安全かどうかを判断してもら�
 docker build -t llm-web-safety-checker .
 ```
 
-# 使い方
+# サンプル
+1. OllamaでGemma4:31bを取得
+```
+ollama pull gemma4:31b
+```
+2. Ollamaサーバーを起動
+```
+ollama.exe run gemma4:31b
+```
+3. dockerコマンドでURLを指定して実行
 ```bash
-docker run --rm llm-web-safety-checker <url>
+docker run --rm llm-web-safety-checker --model-endpoint http://host.docker.internal:11434/ --model-id gemma4:31b <url>
 ```
