@@ -1,10 +1,7 @@
 import os
-import sys
 import base64
 import argparse
 import datetime
-
-from dataclasses import dataclass
 
 from io import BytesIO
 from PIL import Image
@@ -31,7 +28,7 @@ def take_screenshot(url):
   options.add_argument('--headless=new')
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
-  options.add_argument('--window-size=1080,720')
+  #options.add_argument('--window-size=1080,720')
   
   now = datetime.datetime.now()
   filename = f'screenshot_{now.year}_{now.month}_{now.day}_{now.hour}_{now.minute}_{now.second}.png'
