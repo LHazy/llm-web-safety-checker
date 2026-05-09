@@ -4,7 +4,10 @@
 	"name": "Tech Support Fraud Detection",
 	"build": {
 		"dockerfile": "../Dockerfile",
-		"context": ".."
+		"context": "..",
+		"args": {
+			"BUILD_TYPE": "dev"
+		}
 	},
 
 	// Configure tool-specific properties.
@@ -15,7 +18,8 @@
 				"ms-python.python",
 				"GitHub.copilot-chat",
 				"ms-windows-ai-studio.windows-ai-studio",
-				"ms-toolsai.jupyter"
+				"ms-toolsai.jupyter",
+				"ms-azuretools.vscode-containers"
 			]
 		}
 	}
