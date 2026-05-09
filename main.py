@@ -101,12 +101,16 @@ def main(model_endpoint, model_id, url):
   
   print(query_chain)
 
+def validate_url(url):
+  if not url.startswith("http://") and not url.startswith("https://"):
+    raise argparse.ArgumentTypeError("URL must start with http:// or https://")
+  return url
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='LLM Web Safety Checker')
   parser.add_argument('--model-endpoint', type=str, default='http://host.docker.internal:11434/', help='Endpoint of the LLM server')
   parser.add_argument('--model-id', type=str, default='gemma4:31b', help='ID of the model to use')
-  parser.add_argument('url', type=str, help='URL of the website to check')
+  parser.add_argument('url', type=validate_url, help='URL of the website to check (must start with http:// or https://)')
   args = parser.parse_args()
 
   if not os.path.exists('./screenshots'):
